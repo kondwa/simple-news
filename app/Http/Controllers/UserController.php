@@ -9,8 +9,16 @@ class UserController extends Controller{
         return response()->json(User::all());
     }
     function subscribe(Request $request){
-        $user = User::create($request->all());
-        return response()->json($user,200);
+        $validated = $request->validate([
+            'name' => 'required',
+            'email' => 'required'
+        ]);
+        if($validated){
+            $user = User::create($request->all());
+            return response()->json($user,200);
+        }else{
+            return response()->json($validated,200);
+        }
     }
     function unsubscribe(){
         $user = User::where("email",request('email'));
